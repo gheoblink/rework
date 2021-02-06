@@ -14,8 +14,8 @@ section '.data' data readable writable     ; Секция данных
         ru db 'Russian', 0
 
         strVecSize     db 'Введите размер массива: ', 0
-        strSizeException   db 'Неверный размер массива = %d', 10, 0
-        strVecElemI    db 'Введите [%d] элемент массива: ', 0          ; Тексты для вывода в консоль
+        strSizeException   db 'Неверный размер массива           ', 0
+        strVecElemI    db 'Введите [%d] элемент массива: ', 10, 0          ; Тексты для вывода в консоль
         strScanInt     db '%d', 0
         strScanLine    db '%s', 0
         strResult      db 10,'Массив попарных сумм элементов исходного массива:', 10, 0
@@ -53,22 +53,22 @@ finish:
 VectorInput:
         push strVecSize
         call [printf]                 ; Просим ввести длину массива
-     ;   add esp, 4
+        add esp, 4
 
         push vec_size
         push strScanInt               ; Считываем длину массива
         call [scanf]
-     ;   add esp, 8
+        add esp, 8
 
         mov eax, [vec_size]           ; Проверяем корректность длины массива
-        cmp eax, 0                    ; Если положительное число, считываем элементы
+        cmp eax, 1                    ; Если положительное число, считываем элементы
         jg  getVector
 
-        push vec_size
         push strSizeException
-        call [printf]                 ; Если <=0, выводим сообщение и завершаем программу
-        push 0
-        call [ExitProcess]
+        call [printf]                 ; Если <=0, выводим сообщение и завершаем попытку
+        jmp endOutputVector
+      ;  push 0
+      ;  call [ExitProcess]
 
 getVector:
         xor ecx, ecx             ; ecx = 0        Обнуляем регистр-итератор
@@ -83,12 +83,12 @@ getVecLoop:
         push ecx
         push strVecElemI         ; Просим ввести итый элемент
         call [printf]
-     ;   add esp, 8
+        add esp, 8
 
         push ebx
         push strScanInt          ; Считываем итый элемент
         call [scanf]
-    ;    add esp, 8
+        add esp, 8
 
         mov ecx, [i]             ; Увеличиваем значение итератора
         inc ecx
@@ -139,9 +139,9 @@ endSumsVector:
 VectorOut:
         push strResult
         call [printf]           ; Выводим заголовок
-    ;    add esp, 4
+        add esp, 4
 
-    ;    mov [tmpStack], esp
+        mov [tmpStack], esp
         xor ecx, ecx            ; ecx = 0          Обнуляем регистр-итератор для результирующего массива
         mov ebx, vecRes         ; ebx = &vecRes    Перемещаем указатель на результирующий массив в регистр
 putVecLoop:
@@ -164,10 +164,10 @@ putVecLoop:
 
 endOutputVector:
         push strEnding
-        call [printf]                 ; Просим ввести
+        call [printf]                 ; Просим ввести ответ о повторной работе программы
 
         push j
-        push strScanInt               ; Считываем длину массива
+        push strScanInt               ; Считываем ответ
         call [scanf]
         cmp [j], 0
         jg start                      ; Цикл повторения решения
