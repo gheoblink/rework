@@ -170,7 +170,7 @@ endOutputVector:
         push strScanInt               ; Считываем ответ
         call [scanf]
         cmp [j], 0
-        jg start                      ; Цикл повторения решения
+        jle start                      ; Цикл повторения решения
         ret                           ; Выходим из процедуры
 ;-------------------------------third act - including HeapApi--------------------------
                                                  
